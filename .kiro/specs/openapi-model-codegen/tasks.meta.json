@@ -1,0 +1,476 @@
+{
+  "pbtResults": {
+    "7.1 Write property test for schema coverage (Property 1)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991206879
+    },
+    "7.5 Write property test for array collection mapping (Property 5)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991226989
+    },
+    "7.4 Write property test for date/time type mapping (Property 4)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991229346
+    },
+    "7.2 Write property test for reference type resolution (Property 2)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991239280
+    },
+    "7.3 Write property test for enum value completeness (Property 3)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991267378
+    },
+    "7.8 Write property test for Dart serialization annotations (Property 8)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991390954
+    },
+    "7.6 Write property test for Java numeric format mapping (Property 6)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991402064
+    },
+    "7.9 Write property test for Dart additionalProperties mapping (Property 9)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991422605
+    },
+    "7.10 Write property test for models-only output exclusion (Property 10)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991424040
+    },
+    "7.7 Write property test for Jackson annotation presence (Property 7)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785991935031
+    },
+    "7.11 Write property test for generation determinism (Property 11)": {
+      "status": "passed",
+      "lastRunTimestamp": 1785992149628
+    }
+  },
+  "executionHistory": {
+    "1.1 Create directory structure and generator config files": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237425
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990248389
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990744523
+      }
+    ],
+    "1.2 Create `openapitools.json` for generator version pinning": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237602
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990249038
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990745375
+      }
+    ],
+    "2.1 Create Java generation script (`codegen/scripts/generate-java.sh`)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237664
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990750049
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990831861
+      }
+    ],
+    "2.2 Create TypeScript generation script (`codegen/scripts/generate-typescript.sh`)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237704
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990751057
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990832651
+      }
+    ],
+    "2.3 Create Dart generation script (`codegen/scripts/generate-dart.sh`)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237750
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990751887
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990833355
+      }
+    ],
+    "3.1 Create the Makefile with generation, build, and clean targets": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237788
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990842527
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990928974
+      }
+    ],
+    "4. Checkpoint - Validate generation pipeline": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237838
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785992172947
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785992310144
+      }
+    ],
+    "5.1 Create Java Maven package structure": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237873
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990938389
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991003668
+      }
+    ],
+    "5.2 Create TypeScript npm package structure": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237909
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990939036
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991004592
+      }
+    ],
+    "5.3 Create Dart package structure": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237948
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990939611
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991005117
+      }
+    ],
+    "6. Checkpoint - Verify end-to-end generation": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990237982
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785992319562
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785992415906
+      }
+    ],
+    "7.1 Write property test for schema coverage (Property 1)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238005
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991037991
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991283903
+      }
+    ],
+    "7.2 Write property test for reference type resolution (Property 2)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238067
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991038819
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991284591
+      }
+    ],
+    "7.3 Write property test for enum value completeness (Property 3)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238106
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991039739
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991285719
+      }
+    ],
+    "7.4 Write property test for date/time type mapping (Property 4)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238140
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991040534
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991286358
+      }
+    ],
+    "7.5 Write property test for array collection mapping (Property 5)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238176
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991041167
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991287209
+      }
+    ],
+    "7.6 Write property test for Java numeric format mapping (Property 6)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238207
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991292920
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991951579
+      }
+    ],
+    "7.7 Write property test for Jackson annotation presence (Property 7)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238241
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991293537
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991952364
+      }
+    ],
+    "7.8 Write property test for Dart serialization annotations (Property 8)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238276
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991294512
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991953150
+      }
+    ],
+    "7.9 Write property test for Dart additionalProperties mapping (Property 9)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238315
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991295185
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991954212
+      }
+    ],
+    "7.10 Write property test for models-only output exclusion (Property 10)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238339
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991296197
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991954869
+      }
+    ],
+    "7.11 Write property test for generation determinism (Property 11)": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238388
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991960266
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785992162933
+      }
+    ],
+    "8. Final checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990238439
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785992420662
+      },
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785992515657
+      }
+    ],
+    "1. Set up project structure and generator configuration": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990745416
+      }
+    ],
+    "2. Implement generation shell scripts": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990833399
+      }
+    ],
+    "3. Implement Makefile orchestration": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785990929027
+      }
+    ],
+    "5. Create output package scaffolding": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785991005175
+      }
+    ],
+    "7. Validate generated output correctness": [
+      {
+        "executionId": "8597585e-7182-4dc9-aab4-c872ac91cc30",
+        "chatSessionId": "sess_75b652cc-a207-4bad-b263-7a6879fa0fe9",
+        "timestamp": 1785992162966
+      }
+    ]
+  }
+}

@@ -1,0 +1,3947 @@
+---
+openapi: 3.1.0
+tags:
+- name: AI Operations
+  description: AI-powered report generation and processing
+- name: Admission
+  description: Operations for managing patient admissions
+- name: Analytics
+  description: Analytics and reporting statistics
+- name: Appointment
+  description: Operations for managing patient appointments
+- name: Audit Log
+  description: Access and query audit log entries
+- name: Auth
+  description: Authentication and login operations
+- name: Billing Code
+  description: Manage billing codes and pricing
+- name: Clinical User
+  description: Manage clinical users and their roles
+- name: Communication Template
+  description: Manage communication templates for notifications
+- name: Department
+  description: Manage hospital departments
+- name: License
+  description: License management and validation
+- name: MFA
+  description: Multi-factor authentication setup and verification
+- name: PDF
+  description: Generate and download PDF reports
+- name: Patient
+  description: Operations for managing patients and their reports
+- name: Patient Bed
+  description: Manage patient bed assignments
+- name: Patient Bill
+  description: Manage patient billing and invoices
+- name: Patient Visit
+  description: Track and manage patient visits
+- name: Prescription
+  description: Manage patient prescriptions
+- name: Prescription Config
+  description: Configure medical prescription parameters
+- name: Quick Shortcut
+  description: Manage quick-shortcut paragraph templates
+- name: Report
+  description: Operations for managing patient reports
+- name: Report Template
+  description: Manage report templates
+- name: Smart Search
+  description: Smart search across patients and reports
+- name: Suggestion
+  description: Auto-suggestion and recommendation engine
+- name: System Config
+  description: System-level configuration management
+- name: User Assistance
+  description: User help and assistance endpoints
+- name: User Preference
+  description: Manage user preferences and settings
+- name: Vaccination
+  description: Manage patient vaccination records
+- name: Workspace
+  description: Manage clinical workspaces
+components:
+  schemas:
+    # ---------------------------------------------------------------------------
+    # Common / envelope
+    # ---------------------------------------------------------------------------
+    APIMessageLoad:
+      type: object
+      properties:
+        data:
+          type: string
+    APIResponse:
+      type: object
+      properties:
+        apiResponse:
+          type: string
+        statusCode:
+          type: string
+    LineResponse:
+      type: object
+      properties:
+        lines:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        paragraphs:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+    # ---------------------------------------------------------------------------
+    # Auth
+    # ---------------------------------------------------------------------------
+    AuthRequest:
+      type: object
+      properties:
+        userName:
+          type: string
+        password:
+          type: string
+        mfaCode:
+          type: string
+        hospitalID:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        message:
+          type: string
+    ChangePasswordRequest:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+        newPassword:
+          type: string
+    MfaStatusRequest:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        verificationCode:
+          type: string
+    MfaSetupResponse:
+      type: object
+      properties:
+        secret:
+          type: string
+        qrCodeUri:
+          type: string
+        message:
+          type: string
+    # ---------------------------------------------------------------------------
+    # Patient
+    # ---------------------------------------------------------------------------
+    PatientDTO:
+      type: object
+      description: Union of backend, web, and mobile patient models.
+      properties:
+        internalUUID:
+          type: string
+        patientID:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date-time
+        contactNumber:
+          type: string
+        emailID:
+          type: string
+        gender:
+          type: string
+        address:
+          type: string
+        maritalStatus:
+          type: string
+        nationality:
+          type: string
+        creationTime:
+          type: string
+          format: date-time
+        emergencyContactName:
+          type: string
+        emergencyContactNumber:
+          type: string
+        guardianName:
+          type: string
+        guardianContactNumber:
+          type: string
+        guardianRelation:
+          type: string
+        idProofType:
+          type: string
+        idProofValue:
+          type: string
+        patientIDProof:
+          type: string
+        patientIDProofType:
+          type: string
+        photoBase64:
+          type: string
+        reports:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReportDTO"
+    # ---------------------------------------------------------------------------
+    # Appointment  (reference: web app AppointmentDTO union)
+    # ---------------------------------------------------------------------------
+    AppointmentDTO:
+      type: object
+      description: >-
+        Union of the web app (reference), backend, and mobile appointment models.
+      properties:
+        appointUUID:
+          type: string
+        patientUUID:
+          type: string
+        patientName:
+          type: string
+        patientGender:
+          type: string
+        patientAge:
+          type: string
+        patientContactNumber:
+          type: string
+        patientEmail:
+          type: string
+        patientMRN:
+          type: string
+        doctorID:
+          type: string
+        doctorName:
+          type: string
+        doctorPrefix:
+          type: string
+        departmentUUID:
+          type: string
+        department:
+          type: string
+        scheduledStartTime:
+          type: string
+          format: date-time
+        scheduledEndTime:
+          type: string
+          format: date-time
+        durationMinutes:
+          type: integer
+          format: int32
+        bufferMinutes:
+          type: integer
+          format: int32
+        appointmentType:
+          type: string
+        status:
+          $ref: "#/components/schemas/AppointmentStatus"
+        notes:
+          type: string
+        contactNumber:
+          type: string
+        referenceDocument:
+          type: string
+        bookedBy:
+          type: string
+        bookedAt:
+          type: string
+          format: date-time
+        checkedInAt:
+          type: string
+          format: date-time
+        checkedInBy:
+          type: string
+        consultationStartedAt:
+          type: string
+          format: date-time
+        consultationStartedBy:
+          type: string
+        completedAt:
+          type: string
+          format: date-time
+        completedBy:
+          type: string
+        cancelledAt:
+          type: string
+          format: date-time
+        cancelledBy:
+          type: string
+        cancellationReason:
+          type: string
+        noShowAt:
+          type: string
+          format: date-time
+        noShowMarkedBy:
+          type: string
+        noShowReason:
+          type: string
+        rescheduledFromUUID:
+          type: string
+        vitalsRecorded:
+          type: boolean
+        vitalsRecordedAt:
+          type: string
+          format: date-time
+        vitalsRecordedBy:
+          type: string
+        visitUUID:
+          type: string
+        billingUUID:
+          type: string
+        prescriptionUUID:
+          type: string
+        visitType:
+          type: string
+        chiefComplaint:
+          type: string
+        vitalSigns:
+          type: string
+        actualStartTime:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+    AppointmentStatus:
+      type: string
+      enum:
+      - SCHEDULED
+      - CHECKED_IN
+      - VITALS_RECORDING
+      - IN_PROGRESS_CONSULTATION
+      - COMPLETED
+      - NO_SHOW
+      - CANCELLED
+    AppointmentNotificationTemplateType:
+      type: string
+      enum:
+      - CREATE_APPOINTMENT
+      - EDIT_APPOINTMENT
+      - CANCEL_APPOINTMENT
+    # ---------------------------------------------------------------------------
+    # Visit
+    # ---------------------------------------------------------------------------
+    PatientVisitDTO:
+      type: object
+      properties:
+        visitUUID:
+          type: string
+        patientUUID:
+          type: string
+        patientId:
+          type: string
+        patientName:
+          type: string
+        patientGender:
+          type: string
+        patientAge:
+          type: integer
+          format: int32
+        doctorId:
+          type: string
+        doctorName:
+          type: string
+        department:
+          type: string
+        visitReferenceName:
+          type: string
+        referenceID:
+          type: string
+        actualStartTime:
+          type: string
+          format: date-time
+        actualEndTime:
+          type: string
+          format: date-time
+        visitType:
+          type: string
+        status:
+          type: string
+        chiefComplaint:
+          type: string
+        diagnosis:
+          type: string
+        vitalSigns:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    VisitStatus:
+      type: string
+      enum:
+      - CHECKED_IN
+      - IN_PROGRESS
+      - COMPLETED
+      - CANCELLED
+    VisitType:
+      type: string
+      enum:
+      - SCHEDULED
+      - WALK_IN
+      - EMERGENCY
+      - FOLLOW_UP
+    # ---------------------------------------------------------------------------
+    # Admission
+    # ---------------------------------------------------------------------------
+    AdmissionDTO:
+      type: object
+      properties:
+        admissionId:
+          type: string
+        patientUUID:
+          type: string
+        patientVisitUUID:
+          type: string
+        billingID:
+          type: string
+        patientName:
+          type: string
+        patientGender:
+          type: string
+        bedCode:
+          type: string
+        wardName:
+          type: string
+        roomNumber:
+          type: string
+        doctorId:
+          type: string
+        primaryAssignedDoctorName:
+          type: string
+        departmentName:
+          type: string
+        admissionDate:
+          type: string
+          format: date
+        admissionTime:
+          type: string
+          format: date-time
+        dischargeDate:
+          type: string
+          format: date
+        dischargeTime:
+          type: string
+          format: date-time
+        status:
+          type: string
+        admissionType:
+          type: string
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        admissionInsuranceCategory:
+          type: string
+    # ---------------------------------------------------------------------------
+    # Bed
+    # ---------------------------------------------------------------------------
+    PatientBedDTO:
+      type: object
+      properties:
+        bedId:
+          type: string
+        bedCode:
+          type: string
+        status:
+          type: string
+        wardName:
+          type: string
+        roomNumber:
+          type: string
+        currentPatientId:
+          type: string
+        currentPatientName:
+          type: string
+        assignedAt:
+          type: string
+          format: date-time
+        hasVentilatorSupport:
+          type: boolean
+        isIsolation:
+          type: boolean
+    # ---------------------------------------------------------------------------
+    # Billing
+    # ---------------------------------------------------------------------------
+    PatientBillDTO:
+      type: object
+      description: Union of backend, web, and mobile bill models.
+      properties:
+        billId:
+          type: string
+        billingDocumentNumber:
+          type: string
+        visitUUID:
+          type: string
+        patientUUID:
+          type: string
+        patientId:
+          type: string
+        patientName:
+          type: string
+        doctorID:
+          type: string
+        doctorId:
+          type: string
+        doctorName:
+          type: string
+        department:
+          type: string
+        departmentName:
+          type: string
+        contactNumber:
+          type: string
+        category:
+          $ref: "#/components/schemas/BillCategory"
+        status:
+          $ref: "#/components/schemas/BillStatus"
+        totalAmount:
+          type: number
+          format: double
+        paidAmount:
+          type: number
+          format: double
+        balanceAmount:
+          type: number
+          format: double
+        billingDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        paidDate:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/BillingItemDTO"
+        notes:
+          type: string
+        paymentMode:
+          type: string
+        paymentDetails:
+          type: string
+        appointmentUUID:
+          type: string
+        billingReferenceID:
+          type: string
+    BillingItemDTO:
+      type: object
+      properties:
+        billingItemID:
+          type: integer
+          format: int32
+        itemCode:
+          type: string
+        itemName:
+          type: string
+        itemCost:
+          type: number
+          format: double
+        taxInPercentage:
+          type: number
+          format: double
+        quantity:
+          type: integer
+          format: int32
+        subtotal:
+          type: number
+          format: double
+        taxAmount:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+    PatientBillingPaymentHistory:
+      type: object
+      properties:
+        paymentHistoryId:
+          type: string
+        billId:
+          type: string
+        paymentDate:
+          type: string
+          format: date-time
+        amountPaid:
+          type: number
+          format: double
+        paymentMode:
+          type: string
+        paymentDetails:
+          type: string
+        transactionReference:
+          type: string
+        notes:
+          type: string
+        createdBy:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        patientUUID:
+          type: string
+    BillStatus:
+      type: string
+      enum:
+      - DRAFT
+      - PENDING
+      - PAID
+      - PARTIALLY_PAID
+      - COMPLETED
+      - REFUNDED
+      - CANCELLED
+    BillCategory:
+      type: string
+      enum:
+      - CONSULTATION
+      - LAB
+      - PHARMACY
+      - PROCEDURE
+      - ADMISSION
+      - EMERGENCY
+      - IMAGING
+      - OTHER
+    BillingCode:
+      type: object
+      properties:
+        billingCode:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        amount:
+          type: number
+        billingType:
+          type: string
+        active:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    # ---------------------------------------------------------------------------
+    # Prescription  (union: backend flat fields + web items[]/vitals[])
+    # ---------------------------------------------------------------------------
+    PatientPrescriptionDTO:
+      type: object
+      description: >-
+        Union of backend, web, and mobile prescription models. Includes both the
+        flat single-medicine fields and the structured items/vitals arrays.
+      properties:
+        documentUUID:
+          type: string
+        documentNumber:
+          type: string
+        internalUUID:
+          type: string
+        prescriptionUUID:
+          type: string
+        patientUUID:
+          type: string
+        patientName:
+          type: string
+        visitUUID:
+          type: string
+        prescriptionDate:
+          type: string
+          format: date-time
+        state:
+          type: string
+        notes:
+          type: string
+        notesWebcontent:
+          type: string
+        allergies:
+          type: string
+        allergiesWebcontent:
+          type: string
+        diagnosis:
+          type: string
+        diagnosisWebcontent:
+          type: string
+        doctorName:
+          type: string
+        doctorID:
+          type: string
+        chiefComplaint:
+          type: string
+        chiefComplaintWebcontent:
+          type: string
+        department:
+          type: string
+        medicineName:
+          type: string
+        dosage:
+          type: string
+        frequency:
+          type: string
+        duration:
+          type: string
+        instructions:
+          type: string
+        vitalName:
+          type: string
+        value:
+          type: string
+        unit:
+          type: string
+        recordedAt:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PrescriptionItem"
+        vitals:
+          type: array
+          items:
+            $ref: "#/components/schemas/PatientVitals"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PrescriptionItem:
+      type: object
+      properties:
+        itemId:
+          type: string
+        medicineName:
+          type: string
+        dosage:
+          type: string
+        frequency:
+          type: string
+        duration:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+        instructions:
+          type: string
+        refillsAllowed:
+          type: integer
+          format: int32
+    PatientVitals:
+      type: object
+      properties:
+        vitalName:
+          type: string
+        value:
+          type: string
+        unit:
+          type: string
+        recordedAt:
+          type: string
+          format: date-time
+    MedicalPrescriptionConfig:
+      type: object
+      properties:
+        medicineCode:
+          type: string
+        medicineName:
+          type: string
+        genericName:
+          type: string
+        category:
+          type: string
+        drugType:
+          type: string
+        availableDosage:
+          type: string
+        commonFrequency:
+          type: string
+        standardDuration:
+          type: string
+        defaultInstructions:
+          type: string
+        warnings:
+          type: string
+        contraindications:
+          type: string
+        requiresPrescription:
+          type: boolean
+        isActive:
+          type: boolean
+        active:
+          type: boolean
+        manufacturer:
+          type: string
+        unitPrice:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+    # ---------------------------------------------------------------------------
+    # Reports
+    # ---------------------------------------------------------------------------
+    ReportDTO:
+      type: object
+      properties:
+        reportInstanceUUID:
+          type: string
+        reportName:
+          type: string
+        reportStartDate:
+          type: string
+          format: date-time
+        reportStatus:
+          type: string
+        assignedTo:
+          type: string
+        assignedDoctorName:
+          type: string
+        signedBy:
+          type: string
+        referredBy:
+          type: string
+        lastUpdatedTime:
+          type: string
+          format: date-time
+        remarks:
+          type: string
+        templateRererenceID:
+          type: string
+        department:
+          type: string
+        reportId:
+          type: string
+    PatientReportDTO:
+      type: object
+      properties:
+        reportInstanceUUID:
+          type: string
+        reportName:
+          type: string
+        reportID:
+          type: string
+        approvalCategory:
+          type: string
+        reportStartDate:
+          type: string
+          format: date-time
+        reportEndDate:
+          type: string
+          format: date-time
+        reportStatus:
+          type: string
+        assignedTo:
+          type: string
+        assignedDoctorName:
+          type: string
+        signedBy:
+          type: string
+        referredBy:
+          type: string
+        lastUpdatedTime:
+          type: string
+          format: date-time
+        remarks:
+          type: string
+        templateRererenceID:
+          type: string
+        department:
+          type: string
+        patient:
+          $ref: "#/components/schemas/PatientDTO"
+        storageLocation:
+          type: string
+        reportOpenStatus:
+          type: string
+        openedBy:
+          type: string
+        category:
+          type: string
+    PatientReportSegmentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          type: string
+        title:
+          type: string
+        webContent:
+          type: string
+        textContent:
+          type: string
+        referenceSegment:
+          type: string
+        mandatory:
+          type: string
+        uiType:
+          type: string
+        uiOptions:
+          type: array
+          items:
+            type: string
+        segmentOrder:
+          type: integer
+          format: int32
+    MyReportsDTO:
+      type: object
+      properties:
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        reportName:
+          type: string
+        department:
+          type: string
+        reportStartDate:
+          type: string
+          format: date-time
+        patientID:
+          type: string
+        gender:
+          type: string
+        patientUUID:
+          type: string
+        reportUUID:
+          type: string
+        status:
+          type: string
+    ReportTemplateDTO:
+      type: object
+      properties:
+        reporttemplateUUID:
+          type: string
+        name:
+          type: string
+        createdOn:
+          type: string
+        createdBy:
+          type: string
+        department:
+          type: string
+        approvalCategory:
+          type: string
+        version:
+          type: integer
+          format: int32
+        templateStatus:
+          type: boolean
+        htmlStatus:
+          type: boolean
+        segments:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReportTemplateSegmentDTO"
+    ReportTemplateSegmentDTO:
+      type: object
+      properties:
+        segmentUUID:
+          type: string
+        category:
+          type: string
+        title:
+          type: string
+        mandatory:
+          type: string
+        uiType:
+          type: string
+        uiOptions:
+          type: array
+          items:
+            type: string
+        webContent:
+          type: string
+        textContent:
+          type: string
+        segmentOrder:
+          type: integer
+          format: int32
+    # ---------------------------------------------------------------------------
+    # Vaccination
+    # ---------------------------------------------------------------------------
+    VaccinationRecordDTO:
+      type: object
+      properties:
+        recordId:
+          type: string
+        patientUUID:
+          type: string
+        vaccineName:
+          type: string
+        manufacturer:
+          type: string
+        batchNumber:
+          type: string
+        dateAdministered:
+          type: string
+          format: date
+        administeredBy:
+          type: string
+        doseNumber:
+          type: integer
+          format: int32
+        route:
+          type: string
+        site:
+          type: string
+        adverseEffects:
+          type: string
+        recordVerified:
+          type: boolean
+        patientName:
+          type: string
+        patientAge:
+          type: integer
+          format: int32
+        patientGender:
+          type: string
+    # ---------------------------------------------------------------------------
+    # Clinical user / org / config (entity payloads with no dedicated DTO)
+    # ---------------------------------------------------------------------------
+    ClinicalUser:
+      type: object
+      properties:
+        userName:
+          type: string
+        alias:
+          type: string
+        prefix:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+        lastLoggedIn:
+          type: string
+          format: date
+        email:
+          type: string
+        status:
+          type: string
+        contactNumber:
+          type: string
+        password:
+          type: string
+        assigenedDepartments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Department"
+        assignedRoles:
+          type: array
+          items:
+            type: string
+        profile:
+          type: string
+        qualification:
+          type: string
+        lastPasswordChangeDate:
+          type: string
+          format: date-time
+    Department:
+      type: object
+      properties:
+        name:
+          type: string
+    CommunicationTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          type: string
+        itemInCategoty:
+          type: string
+        message:
+          type: string
+    QuickShortCutPara:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/QuickTypeId"
+        content:
+          type: string
+    QuickTypeId:
+      type: object
+      properties:
+        shortCut:
+          type: string
+        templateId:
+          type: string
+    SuggestionRequest:
+      type: object
+      properties:
+        requestData:
+          type: string
+        contextData:
+          type: string
+    SystemConfig:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        passwordExpiryinDays:
+          type: integer
+          format: int32
+    UserPreference:
+      type: object
+      properties:
+        userName:
+          type: string
+        timeFormat:
+          type: string
+        dateFormat:
+          type: string
+        customSettings:
+          type: object
+          additionalProperties: {}
+    ApplicationLicense:
+      type: object
+      properties:
+        licenseKey:
+          type: string
+        type:
+          type: string
+        validityStart:
+          type: string
+          format: date
+        validityEnd:
+          type: string
+          format: date
+        licenseStatus:
+          type: string
+        organization:
+          type: string
+        address:
+          type: string
+        hospitalID:
+          type: string
+        contactNumber:
+          type: string
+        emailAddress:
+          type: string
+        usersLimit:
+          type: integer
+          format: int32
+        reportFormatLimit:
+          type: integer
+          format: int32
+        currentUsers:
+          type: integer
+          format: int32
+        currentReportFormat:
+          type: integer
+          format: int32
+        currentReports:
+          type: integer
+          format: int32
+        features:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    SecurityScheme:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Authentication
+paths:  
+  /api/admissions/active:
+    get:
+      tags:
+      - Admission
+      responses:
+        "200":
+          description: OK
+      summary: Get Active Admissions
+  /api/admissions/all/{patientUUID}:
+    get:
+      tags:
+      - Admission
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get All Admissions
+  /api/admissions/checkout/{admissionId}:
+    put:
+      tags:
+      - Admission
+      parameters:
+      - name: admissionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Check Out Patient
+  /api/admissions/create:
+    post:
+      tags:
+      - Admission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdmissionDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Admission
+  /api/admissions/discharge/{admissionId}:
+    put:
+      tags:
+      - Admission
+      parameters:
+      - name: admissionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Discharge Patient
+  /api/admissions/update/{admissionId}:
+    put:
+      tags:
+      - Admission
+      parameters:
+      - name: admissionId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdmissionDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Admission
+  /api/analytics/appointment-dashboard:
+    get:
+      tags:
+      - Analytics
+      parameters:
+      - name: endDate
+        in: query
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Appointment Dashboard
+  /api/analytics/kpis:
+    get:
+      tags:
+      - Analytics
+      parameters:
+      - name: endDate
+        in: query
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Kpis
+  /api/analytics/revenue-dashboard:
+    get:
+      tags:
+      - Analytics
+      parameters:
+      - name: endDate
+        in: query
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Revenue Dashboard
+  /api/appointments/attend:
+    post:
+      tags:
+      - Appointment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Mark Attended
+  /api/appointments/create:
+    post:
+      tags:
+      - Appointment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Appointment
+  /api/appointments/patient/recent/{patientUUID}:
+    get:
+      tags:
+      - Appointment
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Recent Appointments By Patient
+  /api/appointments/patient/{patientUUID}:
+    get:
+      tags:
+      - Appointment
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Appointments By Patient
+  /api/appointments/patient/{patientUUID}/upcoming:
+    get:
+      tags:
+      - Appointment
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Upcoming Appointments By Patient
+  /api/appointments/{appointUUID}:
+    put:
+      tags:
+      - Appointment
+      parameters:
+      - name: appointUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppointmentDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Appointment
+  /api/appointments/{doctorID}/{date}:
+    get:
+      tags:
+      - Appointment
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: doctorID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Appointments By Doctor
+  /api/appointments/{doctorID}/{date}/{endDate}:
+    get:
+      tags:
+      - Appointment
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: doctorID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: endDate
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Appointment Date Range
+  /api/audit-logs/getAll:
+    get:
+      tags:
+      - Audit Log
+      parameters:
+      - name: date
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Audit Logs
+  /api/bill/all/{date}:
+    get:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get All Bills
+  /api/bill/comeplete/{billID}:
+    get:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: billID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Complete Bill
+  /api/bill/create:
+    post:
+      tags:
+      - Patient Bill
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientBillDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientBillDTO"
+      summary: Crate Bill
+  /api/bill/download/{billId}:
+    get:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: billId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Download Bill PDF
+  /api/bill/page/{page}:
+    get:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: page
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: OK
+      summary: Get Bills Paginated
+  /api/bill/partial-payment/{billingUUID}:
+    post:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: billingUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/PatientBillingPaymentHistory"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Apply Partial Payment
+  /api/bill/patient/{patientId}:
+    get:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: patientId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Bills By Patient Id
+  /api/bill/pdf/{billId}:
+    get:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: billId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Generate Bill PDF
+  /api/bill/{billId}:
+    put:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: billId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientBillDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Bill
+    get:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: billId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Bill By Id
+    delete:
+      tags:
+      - Patient Bill
+      parameters:
+      - name: billId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete Bill
+  /api/billing-codes/all:
+    get:
+      tags:
+      - Billing Code
+      responses:
+        "200":
+          description: OK
+      summary: Get All Billing Codes
+  /api/billing-codes/create:
+    post:
+      tags:
+      - Billing Code
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BillingCode"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Billing Code
+  /api/billing-codes/delete/{billingCodeId}:
+    delete:
+      tags:
+      - Billing Code
+      parameters:
+      - name: billingCodeId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete Billing Code
+  /api/billing-codes/search:
+    get:
+      tags:
+      - Billing Code
+      parameters:
+      - name: q
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Search Billing Codes
+  /api/billing-codes/update/{billingCodeId}:
+    put:
+      tags:
+      - Billing Code
+      parameters:
+      - name: billingCodeId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BillingCode"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Billing Code
+  /api/billing-codes/upload:
+    post:
+      tags:
+      - Billing Code
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Upload Bulk CSV
+  /api/clinicalusers/create:
+    post:
+      tags:
+      - Clinical User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClinicalUser"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create User
+  /api/clinicalusers/delete-password/{userid}:
+    delete:
+      tags:
+      - Clinical User
+      parameters:
+      - name: userid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete Password
+  /api/clinicalusers/edit:
+    put:
+      tags:
+      - Clinical User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClinicalUser"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Edit User
+  /api/clinicalusers/edit/contact:
+    put:
+      tags:
+      - Clinical User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClinicalUser"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Edit Contact User
+  /api/clinicalusers/getAll:
+    get:
+      tags:
+      - Clinical User
+      responses:
+        "200":
+          description: OK
+      summary: Get All
+  /api/clinicalusers/names/{department}:
+    get:
+      tags:
+      - Clinical User
+      parameters:
+      - name: department
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get All User Names
+  /api/clinicalusers/{id}:
+    get:
+      tags:
+      - Clinical User
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get User
+  /api/clinicalusers/{id}/{status}:
+    delete:
+      tags:
+      - Clinical User
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Deactivate
+  /api/communication-templates:
+    get:
+      tags:
+      - Communication Template
+      responses:
+        "200":
+          description: OK
+      summary: Get Templates
+    post:
+      tags:
+      - Communication Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationTemplate"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Template
+  /api/communication-templates/getConent/appointment/{appointmentUUID}/{type}:
+    get:
+      tags:
+      - Communication Template
+      parameters:
+      - name: appointmentUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Create Appointment Response
+  /api/communication-templates/getContent/onboarding/{patientUUID}:
+    get:
+      tags:
+      - Communication Template
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Template
+  /api/communication-templates/preview/billing:
+    post:
+      tags:
+      - Communication Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationTemplate"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Get Billing Preview Template
+  /api/communication-templates/preview/prescription:
+    post:
+      tags:
+      - Communication Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationTemplate"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Preview Prescription
+  /api/communication-templates/template/billing:
+    get:
+      tags:
+      - Communication Template
+      responses:
+        "200":
+          description: OK
+      summary: Ge Billing Template
+  /api/communication-templates/template/prescription:
+    get:
+      tags:
+      - Communication Template
+      responses:
+        "200":
+          description: OK
+      summary: Get Prescription Template
+  /api/communication-templates/update-template/billing:
+    post:
+      tags:
+      - Communication Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationTemplate"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Template
+  /api/communication-templates/update-template/prescription:
+    post:
+      tags:
+      - Communication Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationTemplate"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Prescription Template
+  /api/communication-templates/{id}:
+    put:
+      tags:
+      - Communication Template
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommunicationTemplate"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Template
+    get:
+      tags:
+      - Communication Template
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get By Id
+  /api/departments:
+    get:
+      tags:
+      - Department
+      responses:
+        "200":
+          description: OK
+      summary: Get All Available Departments
+    delete:
+      tags:
+      - Department
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Department"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Delete Department
+    post:
+      tags:
+      - Department
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Department"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Department
+  /api/departments/names:
+    get:
+      tags:
+      - Department
+      responses:
+        "200":
+          description: OK
+      summary: Get All User Names
+  /api/login/authenticate:
+    post:
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Login
+  /api/login/changePassword:
+    post:
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Change Password
+  /api/login/logout:
+    post:
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIMessageLoad"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Log Out
+  /api/login/setPassword:
+    post:
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Set Password
+  /api/medicine-config:
+    get:
+      tags:
+      - Prescription Config
+      responses:
+        "200":
+          description: OK
+      summary: Get All
+    post:
+      tags:
+      - Prescription Config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicalPrescriptionConfig"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create
+  /api/medicine-config/active:
+    get:
+      tags:
+      - Prescription Config
+      responses:
+        "200":
+          description: OK
+      summary: Get Active
+  /api/medicine-config/search:
+    get:
+      tags:
+      - Prescription Config
+      parameters:
+      - name: term
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Search
+  /api/medicine-config/upload:
+    post:
+      tags:
+      - Prescription Config
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Upload Bulk CSV
+  /api/medicine-config/{code}:
+    put:
+      tags:
+      - Prescription Config
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MedicalPrescriptionConfig"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update
+    get:
+      tags:
+      - Prescription Config
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get By Code
+    delete:
+      tags:
+      - Prescription Config
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete
+  /api/mfa/setup:
+    get:
+      tags:
+      - MFA
+      responses:
+        "200":
+          description: OK
+      summary: Get Mfa Setup
+  /api/mfa/status:
+    post:
+      tags:
+      - MFA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MfaStatusRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Mfa Status
+  /api/patient-beds/available:
+    get:
+      tags:
+      - Patient Bed
+      responses:
+        "200":
+          description: OK
+      summary: Get Available Beds
+  /api/patient-beds/available/ward/{wardName}:
+    get:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: wardName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Available Beds By Ward
+  /api/patient-beds/code/{bedCode}:
+    get:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: bedCode
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Bed By Code
+  /api/patient-beds/create:
+    post:
+      tags:
+      - Patient Bed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientBedDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Bed
+  /api/patient-beds/getAll:
+    get:
+      tags:
+      - Patient Bed
+      responses:
+        "200":
+          description: OK
+      summary: Get All Beds
+  /api/patient-beds/getAllBedWithPatient:
+    get:
+      tags:
+      - Patient Bed
+      responses:
+        "200":
+          description: OK
+      summary: Get All Bedswith Patient
+  /api/patient-beds/occupied:
+    get:
+      tags:
+      - Patient Bed
+      responses:
+        "200":
+          description: OK
+      summary: Get Occupied Beds
+  /api/patient-beds/patient/{patientId}:
+    get:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: patientId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Beds By Patient Id
+  /api/patient-beds/statistics/ward/{wardName}:
+    get:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: wardName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Bed Statistics By Ward
+  /api/patient-beds/ward/{wardName}:
+    get:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: wardName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Beds By Ward
+  /api/patient-beds/{bedId}:
+    put:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: bedId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientBedDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Bed
+    get:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: bedId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Bed By Id
+    delete:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: bedId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete Bed
+  /api/patient-beds/{bedId}/assign:
+    post:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: bedId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Assign Patient To Bed
+  /api/patient-beds/{bedId}/release:
+    post:
+      tags:
+      - Patient Bed
+      parameters:
+      - name: bedId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Release Bed
+  /api/patients/all/{pageNumber}/{pageSize}:
+    get:
+      summary: Get all patients (paginated)
+      description: Retrieve a paginated list of all patients
+      tags:
+      - Patient
+      parameters:
+      - description: Zero-based page number
+        in: path
+        name: pageNumber
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - description: Number of patients per page
+        in: path
+        name: pageSize
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/patients/checkPIDExists/{patientid}:
+    get:
+      summary: Check if Patient ID exists
+      description: Check whether a given patient ID (PID) already exists in the system
+      tags:
+      - Patient
+      parameters:
+      - description: Patient ID to check
+        in: path
+        name: patientid
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/patients/create:
+    post:
+      summary: Create patient
+      description: Create a new patient record. Returns 409 if the patient ID already
+        exists
+      tags:
+      - Patient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/patients/createReport/{patientUUID}/{reportUUID}/{assignedTo}:
+    post:
+      summary: Create report for patient
+      description: Create a new report for a patient from a report template and assign
+        it to a user
+      tags:
+      - Patient
+      parameters:
+      - description: Username the report is assigned to
+        in: path
+        name: assignedTo
+        required: true
+        schema:
+          type: string
+      - description: Internal UUID of the patient
+        in: path
+        name: patientUUID
+        required: true
+        schema:
+          type: string
+      - description: UUID of the report template
+        in: path
+        name: reportUUID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/patients/generatePID:
+    get:
+      summary: Generate Patient ID
+      description: Generate a unique patient ID (PID) for the current tenant
+      tags:
+      - Patient
+      responses:
+        "200":
+          description: OK
+  /api/patients/max-pages/{pageSize}:
+    get:
+      summary: Get total pages
+      description: Returns the total number of pages for a given page size
+      tags:
+      - Patient
+      parameters:
+      - description: Number of patients per page
+        in: path
+        name: pageSize
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+  /api/patients/myreports/{username}:
+    get:
+      summary: Get my reports
+      description: Get all patients with reports assigned to a specific user
+      tags:
+      - Patient
+      parameters:
+      - description: Username to filter assigned reports
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/patients/search/{contactNumber}:
+    get:
+      summary: Search patients by contact number
+      description: Search for patients using a contact/phone number
+      tags:
+      - Patient
+      parameters:
+      - description: Contact number to search
+        in: path
+        name: contactNumber
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/patients/thumbnails:
+    post:
+      summary: Get patient thumbnails
+      description: Fetch thumbnail images for a list of patient UUIDs
+      tags:
+      - Patient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/patients/update/{patientUUID}:
+    put:
+      summary: Update patient
+      description: Update an existing patient's details by internal UUID
+      tags:
+      - Patient
+      parameters:
+      - description: Internal UUID of the patient
+        in: path
+        name: patientUUID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/patients/uploadSnap/{patientUUID}:
+    post:
+      summary: Upload patient photo (multipart)
+      description: Upload a patient's photo as a multipart/form-data file with field
+        name 'file'
+      tags:
+      - Patient
+      parameters:
+      - description: Internal UUID of the patient
+        in: path
+        name: patientUUID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/patients/uploadSnapBytes/{patientUUID}:
+    post:
+      summary: Upload patient photo (raw bytes)
+      description: "Upload a patient's photo as raw bytes. Content-Type must be image/jpeg,\
+        \ image/png, or application/octet-stream"
+      tags:
+      - Patient
+      parameters:
+      - description: Internal UUID of the patient
+        in: path
+        name: patientUUID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/png:
+            schema:
+              type: string
+              format: binary
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/patients/{id}:
+    get:
+      summary: Get patient by UUID
+      description: Load a patient record (without reports) by internal UUID
+      tags:
+      - Patient
+      parameters:
+      - description: Internal UUID of the patient
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/patients/{patientID}/{reportID}:
+    get:
+      summary: Get a specific patient report
+      description: Retrieve a single report for a patient. Returns 409 if the report
+        is already open by another user
+      tags:
+      - Patient
+      parameters:
+      - description: Internal UUID of the patient
+        in: path
+        name: patientID
+        required: true
+        schema:
+          type: string
+      - description: Report instance UUID
+        in: path
+        name: reportID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/patients/{patientuuid}/upload:
+    post:
+      summary: Upload PDF report for patient
+      description: Upload a PDF report file for a patient. Requires 'Report-Metadata'
+        header with JSON report metadata and 'file' multipart field
+      tags:
+      - Patient
+      parameters:
+      - description: Internal UUID of the patient
+        in: path
+        name: patientuuid
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIResponse"
+  /api/pdf/manual:
+    get:
+      tags:
+      - PDF
+      responses:
+        "200":
+          description: OK
+      summary: Get User Manual Pdf
+  /api/pdf/{patientID}/{reportID}:
+    get:
+      tags:
+      - PDF
+      parameters:
+      - name: patientID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: reportID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Pdf As Base 64
+  /api/prescriptions:
+    post:
+      tags:
+      - Prescription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientPrescriptionDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Prescription
+  /api/prescriptions/date-range:
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: endDate
+        in: query
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Prescriptions By Date Range
+  /api/prescriptions/date/{date}:
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Prescriptions By Date
+  /api/prescriptions/patient/{patientUUID}:
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Prescriptions By Patient
+  /api/prescriptions/patient/{patientUUID}/active:
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Active Prescriptions By Patient
+  /api/prescriptions/patient/{patientUUID}/recent:
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Most Recent Prescription
+  /api/prescriptions/printable/pdf/{prescriptionID}:
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: prescriptionID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Printable Prescription
+  /api/prescriptions/state/{state}:
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: state
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Prescriptions By State
+  /api/prescriptions/visit/{visitUUID}:
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: visitUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Prescriptions By Visit
+  /api/prescriptions/{prescriptionUUID}:
+    put:
+      tags:
+      - Prescription
+      parameters:
+      - name: prescriptionUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientPrescriptionDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Prescription
+    get:
+      tags:
+      - Prescription
+      parameters:
+      - name: prescriptionUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Prescription
+    delete:
+      tags:
+      - Prescription
+      parameters:
+      - name: prescriptionUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete Prescription
+  /api/prescriptions/{prescriptionUUID}/state:
+    put:
+      tags:
+      - Prescription
+      parameters:
+      - name: prescriptionUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: state
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Update Prescription State
+  /api/quick-shortcut-para:
+    post:
+      tags:
+      - Quick Shortcut
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuickShortCutPara"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuickShortCutPara"
+      summary: Create
+  /api/quick-shortcut-para/{shortCut}/{templateID}:
+    delete:
+      tags:
+      - Quick Shortcut
+      parameters:
+      - name: shortCut
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: templateID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Delete
+  /api/quick-shortcut-para/{templateId}:
+    get:
+      tags:
+      - Quick Shortcut
+      parameters:
+      - name: templateId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get All By Template ID
+  /api/report-ops/auto-correct-segment:
+    post:
+      tags:
+      - AI Operations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientReportSegmentDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Auto Correct Segment
+  /api/report-ops/auto-correct-sentence:
+    post:
+      tags:
+      - AI Operations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIMessageLoad"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Auto Correct Sentence
+  /api/report-templates:
+    get:
+      tags:
+      - Report Template
+      responses:
+        "200":
+          description: OK
+      summary: Get All
+  /api/report-templates/create:
+    post:
+      tags:
+      - Report Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportTemplateDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Template
+  /api/report-templates/names/{department}:
+    get:
+      tags:
+      - Report Template
+      parameters:
+      - name: department
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get All Names
+  /api/report-templates/template/html/{templateUUID}:
+    get:
+      tags:
+      - Report Template
+      parameters:
+      - name: templateUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Report Templates
+  /api/report-templates/template/{templateUUID}:
+    post:
+      tags:
+      - Report Template
+      parameters:
+      - name: templateUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIMessageLoad"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Save Report Templates
+  /api/report-templates/update:
+    put:
+      tags:
+      - Report Template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportTemplateDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Template
+  /api/report-templates/upload:
+    post:
+      tags:
+      - Report Template
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Upload Zip
+  /api/report-templates/{id}:
+    get:
+      tags:
+      - Report Template
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Report
+    delete:
+      tags:
+      - Report Template
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete
+  /api/report-templates/{templateUUID}/preview/pdf:
+    post:
+      tags:
+      - Report Template
+      parameters:
+      - name: templateUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIMessageLoad"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Get Pdf Preview
+  /api/reports/changeAssignee/{reportID}/{newAssignee}:
+    get:
+      summary: Change report assignee
+      description: Change the user a report is assigned to
+      tags:
+      - Report
+      parameters:
+      - description: Username of the new assignee
+        in: path
+        name: newAssignee
+        required: true
+        schema:
+          type: string
+      - description: Report instance UUID
+        in: path
+        name: reportID
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/reports/close/{id}:
+    put:
+      summary: Close a report
+      description: Mark a report as closed (not open) so other users can access it
+      tags:
+      - Report
+      parameters:
+      - description: Report instance UUID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/reports/update/{reportID}:
+    put:
+      summary: Update report metadata
+      description: "Update report-level metadata (assignee, remarks, referredBy).\
+        \ Returns 409 if the report is locked by another user within 5 minutes"
+      tags:
+      - Report
+      parameters:
+      - description: Report instance UUID
+        in: path
+        name: reportID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/reports/{id}:
+    get:
+      summary: Get report by ID
+      description: Fetch a single report by its instance UUID. Returns 409 if already
+        opened by another user
+      tags:
+      - Report
+      parameters:
+      - description: Report instance UUID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+    delete:
+      summary: Delete a report
+      description: Delete a report by instance UUID. Completed reports cannot be deleted
+        (returns 409)
+      tags:
+      - Report
+      parameters:
+      - description: Report instance UUID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/reports/{patientID}/{id}:
+    put:
+      summary: Update report segments
+      description: Update a report's segments content by patient UUID and report instance
+        UUID
+      tags:
+      - Report
+      parameters:
+      - description: Report instance UUID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: Internal UUID of the patient
+        in: path
+        name: patientID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientReportDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/reports/{patientID}/{id}/complete:
+    put:
+      summary: Complete a report
+      description: "Mark a report as complete, set end date, and trigger async line\
+        \ matching/caching"
+      tags:
+      - Report
+      parameters:
+      - description: Report instance UUID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: Internal UUID of the patient
+        in: path
+        name: patientID
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientReportDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/reports/{userid}:
+    get:
+      summary: Get reports assigned to user
+      description: Fetch all reports currently assigned to the specified user
+      tags:
+      - Report
+      parameters:
+      - description: Username/user ID
+        in: path
+        name: userid
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/smartsearch/searchReport/{referenceSegment}:
+    post:
+      tags:
+      - Smart Search
+      parameters:
+      - name: referenceSegment
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIMessageLoad"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Search Report
+  /api/suggestions/complete/{word}:
+    get:
+      tags:
+      - Suggestion
+      parameters:
+      - name: word
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Words
+  /api/suggestions/completeLine/{segmentID}/{templateId}:
+    post:
+      tags:
+      - Suggestion
+      parameters:
+      - name: segmentID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: templateId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SuggestionRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LineResponse"
+      summary: Get Report Line
+  /api/suggestions/completeSingleLine/{segmentID}/{line}/{templateId}:
+    get:
+      tags:
+      - Suggestion
+      parameters:
+      - name: line
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: segmentID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: templateId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LineResponse"
+      summary: Get Report Single Line
+  /api/suggestions/deleteDbLine/{lineID}/{segmentID}:
+    delete:
+      tags:
+      - Suggestion
+      parameters:
+      - name: lineID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: segmentID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete DB Cache
+  /api/suggestions/saveLine/{segmentID}:
+    post:
+      tags:
+      - Suggestion
+      parameters:
+      - name: segmentID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LineResponse"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Save Line
+  /api/suggestions/saved/{segmentID}:
+    get:
+      tags:
+      - Suggestion
+      parameters:
+      - name: segmentID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get All Lines
+  /api/suggestions/{department}/{templateUUID}/uploadCSV:
+    post:
+      tags:
+      - Suggestion
+      parameters:
+      - name: department
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: templateUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Upload CSV
+  /api/system-config/all:
+    get:
+      tags:
+      - System Config
+      responses:
+        "200":
+          description: OK
+      summary: Get All
+  /api/system-config/create:
+    post:
+      tags:
+      - System Config
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SystemConfig"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create
+  /api/system-config/{id}:
+    put:
+      tags:
+      - System Config
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SystemConfig"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update
+    delete:
+      tags:
+      - System Config
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+      summary: Delete
+  /api/user-assistance/data/{query}:
+    get:
+      tags:
+      - User Assistance
+      parameters:
+      - name: query
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Data
+  /api/user-assistance/stream/{query}:
+    get:
+      tags:
+      - User Assistance
+      parameters:
+      - name: query
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Stream Answer
+  /api/userPrefs:
+    post:
+      tags:
+      - User Preference
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserPreference"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Or Update
+  /api/userPrefs/getPref:
+    get:
+      tags:
+      - User Preference
+      responses:
+        "200":
+          description: OK
+      summary: Get By User Name
+  /api/vaccination-records/all:
+    get:
+      tags:
+      - Vaccination
+      responses:
+        "200":
+          description: OK
+      summary: Get All
+  /api/vaccination-records/create:
+    post:
+      tags:
+      - Vaccination
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VaccinationRecordDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create
+  /api/vaccination-records/delete/{recordId}:
+    delete:
+      tags:
+      - Vaccination
+      parameters:
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Delete
+  /api/vaccination-records/patient/{patientUUID}:
+    get:
+      tags:
+      - Vaccination
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get By Patient
+  /api/vaccination-records/patient/{patientUUID}/vaccine/{vaccineName}:
+    get:
+      tags:
+      - Vaccination
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: vaccineName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get By Patient And Vaccine
+  /api/vaccination-records/{recordId}:
+    get:
+      tags:
+      - Vaccination
+      parameters:
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get By Id
+  /api/visits:
+    post:
+      tags:
+      - Patient Visit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientVisitDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Create Visit
+  /api/visits/date-range:
+    get:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: endDate
+        in: query
+        schema:
+          type: string
+      - name: startDate
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Visits By Date Range
+  /api/visits/date/{date}:
+    get:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Visits By Date
+  /api/visits/patient/{patientUUID}:
+    get:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Visits By Patient
+  /api/visits/patient/{patientUUID}/recent:
+    get:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: patientUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Most Recent Visit By Patient
+  /api/visits/today:
+    get:
+      tags:
+      - Patient Visit
+      responses:
+        "200":
+          description: OK
+      summary: Get Todays Visits
+  /api/visits/{visitUUID}:
+    put:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: visitUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientVisitDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Update Visit
+    get:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: visitUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Get Visit By Id
+  /api/visits/{visitUUID}/cancel:
+    put:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: visitUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Cancel Visit
+  /api/visits/{visitUUID}/complete:
+    put:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: visitUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: diagnosis
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Complete Visit
+  /api/visits/{visitUUID}/diagnosis:
+    put:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: visitUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: diagnosis
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Update Diagnosis
+  /api/visits/{visitUUID}/start:
+    put:
+      tags:
+      - Patient Visit
+      parameters:
+      - name: visitUUID
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+      summary: Start Visit
+  /api/workspace/licenseInfo:
+    post:
+      tags:
+      - Workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationLicense"
+      summary: Get License
+  /api/workspace/refresh-token:
+    post:
+      tags:
+      - Workspace
+      responses:
+        "200":
+          description: OK
+      summary: Refresh Token
+  /api/workspace/userinfo:
+    post:
+      tags:
+      - Workspace
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: OK
+      summary: Validate Token
+info:
+  title: DigiDoc API
+  version: 1.0.0
+  description: Backend API for DigiDoc medical documentation system
+servers:
+  - url: https://example.server.io
+    description: description server text.

@@ -1,0 +1,10 @@
+generatorName: dart
+inputSpec: APISpec/OpenAPI.yaml
+outputDir: codegen/output/dart
+globalProperties:
+  models: ""
+additionalProperties:
+  pubName: coreapi_models
+  pubVersion: 1.0.0
+  serializationLibrary: json_serializable
+  useEnumExtension: true

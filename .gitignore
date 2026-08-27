@@ -1,0 +1,17 @@
+# Generated model libraries (reproducible via `make generate-*`)
+codegen/output/
+
+# Spec backups
+*.bak
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
