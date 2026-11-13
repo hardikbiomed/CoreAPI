@@ -133,6 +133,18 @@ components:
           type: string
         message:
           type: string
+        username:
+          type: string
+          description: Username.
+        issuer:
+          type: string
+          description: Issuer.
+        otpAuthUrl:
+          type: string
+          description: Otp Auth Url.
+        qrCodeDataUri:
+          type: string
+          description: Qr Code Data Uri.
     # ---------------------------------------------------------------------------
     # Patient
     # ---------------------------------------------------------------------------
@@ -188,6 +200,17 @@ components:
           type: string
         photoBase64:
           type: string
+        lastAccessedTime:
+          type: string
+          description: Last time the patient record was accessed.
+        verificationStatus:
+          type: string
+          description: Verification state of the patient record.
+        patientBedUUID:
+          type: string
+          description: Identifier of the bed the patient is currently assigned to.
+        patientBed:
+          $ref: "#/components/schemas/PatientBedDTO"
         reports:
           type: array
           items:
@@ -202,6 +225,10 @@ components:
       properties:
         appointUUID:
           type: string
+        appointmentUUID:
+          type: string
+          readOnly: true
+          description: UUID of the reference appointment that the backend uses to manage this appointment.
         patientUUID:
           type: string
         patientName:
@@ -215,6 +242,8 @@ components:
         patientEmail:
           type: string
         patientMRN:
+          type: string
+        patientId:
           type: string
         doctorID:
           type: string
@@ -316,6 +345,30 @@ components:
           format: date-time
         updatedBy:
           type: string
+        isVitalRecorded:
+          type: boolean
+          description: Is Vital Recorded.
+        vitalRecorded:
+          type: boolean
+          description: Vital Recorded.
+        vitalRecordedAt:
+          type: string
+          format: date-time
+          description: Vital Recorded At.
+        vitalRecordedBy:
+          type: string
+          description: Vital Recorded By.
+        patientID:
+          type: string
+          description: Patient ID.
+        checkedInTime:
+          type: string
+          format: date-time
+          description: Checked In Time.
+        consultationStartedTime:
+          type: string
+          format: date-time
+          description: Consultation Started Time.
     AppointmentStatus:
       type: string
       enum:
@@ -480,6 +533,9 @@ components:
           type: boolean
         isIsolation:
           type: boolean
+        patient:
+          $ref: "#/components/schemas/PatientDTO"
+          description: Patient.
     # ---------------------------------------------------------------------------
     # Billing
     # ---------------------------------------------------------------------------
@@ -498,6 +554,10 @@ components:
         patientId:
           type: string
         patientName:
+          type: string
+        patientGender:
+          type: string
+        patientAge:
           type: string
         doctorID:
           type: string
@@ -553,6 +613,17 @@ components:
           type: string
         billingReferenceID:
           type: string
+        createdDate:
+          type: string
+          format: date-time
+          description: Created Date.
+        updatedDate:
+          type: string
+          format: date-time
+          description: Updated Date.
+        visit:
+          $ref: "#/components/schemas/PatientVisitDTO"
+          description: Visit.
     BillingItemDTO:
       type: object
       properties:
@@ -672,6 +743,15 @@ components:
           type: string
         patientName:
           type: string
+        patientGender:
+          type: string
+          description: Gender of the patient (e.g., Male, Female, Other)
+        patientID:
+          type: string
+          description: Unique patient identifier
+        patientAge:
+          type: string
+          description: Age of the patient in human-readable format (e.g., "26 Years")
         visitUUID:
           type: string
         prescriptionDate:
@@ -734,6 +814,47 @@ components:
         updatedAt:
           type: string
           format: date-time
+        appointmentUUID:
+          type: string
+          description: Appointment UUID.
+        appointmentStatus:
+          type: string
+          description: Appointment Status.
+        doctorId:
+          type: string
+          description: Doctor Id.
+        prescriptionId:
+          type: string
+          description: Prescription Id.
+        medications:
+          type: array
+          items:
+            $ref: "#/components/schemas/PrescriptionItem"
+          description: Medications.
+        chiefComplalints:
+          type: string
+          description: Chief Complalints.
+        followUpNotes:
+          type: string
+          description: Follow Up Notes.
+        validUntil:
+          type: string
+          format: date-time
+          description: Valid Until.
+        followUpDate:
+          type: string
+          format: date-time
+          description: Follow Up Date.
+        isFinalized:
+          type: boolean
+          description: Is Finalized.
+        dispensed:
+          type: boolean
+          description: Dispensed.
+        dispensedDate:
+          type: string
+          format: date-time
+          description: Dispensed Date.
     PrescriptionItem:
       type: object
       properties:
@@ -812,6 +933,24 @@ components:
           type: string
         updatedBy:
           type: string
+        availableDosages:
+          type: array
+          items:
+            type: string
+          description: Available Dosages.
+        commonFrequencies:
+          type: array
+          items:
+            type: string
+          description: Common Frequencies.
+        standardDurations:
+          type: array
+          items:
+            type: string
+          description: Standard Durations.
+        chiefComplaints:
+          type: string
+          description: Chief Complaints.
     # ---------------------------------------------------------------------------
     # Reports
     # ---------------------------------------------------------------------------
@@ -892,6 +1031,17 @@ components:
           type: string
         category:
           type: string
+        segments:
+          type: array
+          items:
+            $ref: "#/components/schemas/PatientReportSegmentDTO"
+          description: Segments.
+        reportid:
+          type: string
+          description: Reportid.
+        reportId:
+          type: string
+          description: Report Id.
     PatientReportSegmentDTO:
       type: object
       properties:
@@ -918,6 +1068,9 @@ components:
         segmentOrder:
           type: integer
           format: int32
+        patientReport:
+          $ref: "#/components/schemas/PatientReportDTO"
+          description: Patient Report.
     MyReportsDTO:
       type: object
       properties:
@@ -944,6 +1097,12 @@ components:
           type: string
         status:
           type: string
+        contactNumber:
+          type: string
+          description: Contact Number.
+        reportId:
+          type: string
+          description: Report Id.
     ReportTemplateDTO:
       type: object
       properties:
@@ -1077,6 +1236,14 @@ components:
         lastPasswordChangeDate:
           type: string
           format: date-time
+        permissions:
+          type: array
+          items:
+            type: string
+          description: Permissions.
+        doctorID:
+          type: string
+          description: Doctor ID.
     Department:
       type: object
       properties:
@@ -1093,6 +1260,9 @@ components:
           type: string
         message:
           type: string
+        webContent:
+          type: string
+          description: Web Content.
     QuickShortCutPara:
       type: object
       properties:
@@ -1135,6 +1305,9 @@ components:
         customSettings:
           type: object
           additionalProperties: {}
+        emailNotifications:
+          type: boolean
+          description: Email Notifications.
     ApplicationLicense:
       type: object
       properties:
@@ -1179,6 +1352,17 @@ components:
           type: array
           items:
             type: string
+        featureList:
+          type: array
+          items:
+            type: string
+          description: Feature List.
+        organizationID:
+          type: number
+          description: Organization ID.
+        paymentDetails:
+          type: string
+          description: Payment Details.
   securitySchemes:
     SecurityScheme:
       type: http
