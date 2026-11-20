@@ -4078,6 +4078,108 @@ paths:
                 $ref: '#/components/schemas/PatientVisitDTO'
       security:
       - SecurityScheme: []
+  /api/doctor-schedule/me:
+    get:
+      operationId: getMyDoctorSchedule
+      tags:
+      - DoctorSchedule
+      summary: Get the signed-in doctor's appointment timing
+      description: >-
+        Returns the schedule of the doctor identified by the token user name. Only a user with the
+        Doctor profile may call this (PREF-C-001, PREF-C-002). No doctor identifier is taken from the
+        request.
+      responses:
+        '200':
+          description: The doctor's schedule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorSchedule'
+        '403':
+          description: The signed-in user does not have the Doctor profile.
+      security:
+      - SecurityScheme: []
+    put:
+      operationId: saveMyDoctorSchedule
+      tags:
+      - DoctorSchedule
+      summary: Save the signed-in doctor's appointment timing
+      description: >-
+        Replaces the whole weekly schedule of the signed-in doctor (PREF-C-003 to PREF-C-011). The
+        server rejects overlapping ranges on the same day (PREF-C-005). The save writes one free-text
+        entry to the audit log (PREF-C-011). Future appointments that fall outside the new ranges are
+        kept and returned as warnings (PREF-C-018).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoctorSchedule'
+      responses:
+        '200':
+          description: The saved schedule and the future appointments outside it.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorScheduleSaveResponse'
+        '400':
+          description: A range is invalid or overlaps another range on the same day.
+        '403':
+          description: The signed-in user does not have the Doctor profile.
+      security:
+      - SecurityScheme: []
+  /api/appointments/available-slots:
+    get:
+      operationId: getAvailableSlots
+      tags:
+      - Appointment
+      summary: Get the bookable slots of a doctor for one date
+      description: >-
+        Returns the free slots the server computes from the doctor's ranges, slot start setting, and
+        existing appointments (PREF-C-015). Any signed-in user may read it, including staff
+        (PREF-C-003). Staff cannot read or change the schedule itself.
+      parameters:
+      - name: doctorID
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: date
+        in: query
+        required: true
+        description: Local clinic date, YYYY-MM-DD.
+        schema:
+          type: string
+          format: date
+      - name: excludeAppointUUID
+        in: query
+        required: false
+        description: >-
+          Appointment being rescheduled. Its own time is not counted as busy, so its current slot stays
+          available (APT-C-031, PREF-X-D16).
+        schema:
+          type: string
+      - name: durationMinutes
+        in: query
+        required: true
+        description: Visit length. Only 10, 15, or 20 minutes are offered (PREF-C-017).
+        schema:
+          type: integer
+          enum:
+          - 10
+          - 15
+          - 20
+      responses:
+        '200':
+          description: The free slots for the date. An empty list comes with a reason.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableSlots'
+        '400':
+          description: A parameter is missing or invalid.
+      security:
+      - SecurityScheme: []
   /api/workspace/licenseInfo:
     post:
       operationId: getLicense
@@ -4086,11 +4188,13 @@ paths:
       summary: Get License
       responses:
         '200':
-          description: Successful response
+          description: The license of the caller's organization. The feature list drives module gating (GEN-C-001).
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/ApplicationLicense'
+        '404':
+          description: No license exists for the organization in the token.
       security:
       - SecurityScheme: []
   /api/workspace/refresh-token:
@@ -4131,6 +4235,189 @@ components:
       bearerFormat: JWT
       description: Authentication
   schemas:
+    WeekDay:
+      type: string
+      enum:
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+      - SUNDAY
+    SlotStartMode:
+      type: string
+      description: >-
+        RANGE_START: slots start at the start of each range (PREF-C-016 a). CLOCK_TIME: slots start at
+        fixed clock times counted from 00:00 in steps of the visit length (PREF-C-016 b).
+      enum:
+      - RANGE_START
+      - CLOCK_TIME
+    DoctorScheduleRange:
+      type: object
+      required:
+      - dayOfWeek
+      - startTime
+      - endTime
+      properties:
+        dayOfWeek:
+          $ref: '#/components/schemas/WeekDay'
+        startTime:
+          type: string
+          description: 24-hour time with minutes, HH:mm (for example 08:30).
+          pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+        endTime:
+          type: string
+          description: 24-hour time with minutes, HH:mm. Must be after startTime.
+          pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+        label:
+          type: string
+          maxLength: 50
+          description: Optional label such as Morning, Afternoon, or Evening.
+    DoctorSchedule:
+      type: object
+      required:
+      - ranges
+      properties:
+        doctorID:
+          type: string
+          readOnly: true
+          description: Set by the server from the token. Ignored on save.
+        slotStartMode:
+          description: Null until the doctor sets it. A save requires a value.
+          allOf:
+          - $ref: '#/components/schemas/SlotStartMode'
+        ranges:
+          type: array
+          description: Availability ranges for the week. A weekday with no range is closed.
+          items:
+            $ref: '#/components/schemas/DoctorScheduleRange'
+    AffectedAppointment:
+      type: object
+      description: A future appointment that falls outside the saved ranges (PREF-C-018).
+      properties:
+        appointUUID:
+          type: string
+        appointmentDate:
+          type: string
+          format: date
+        startTime:
+          type: string
+          pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+        endTime:
+          type: string
+          pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+        patientName:
+          type: string
+    DoctorScheduleSaveResponse:
+      type: object
+      properties:
+        schedule:
+          $ref: '#/components/schemas/DoctorSchedule'
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/AffectedAppointment'
+    TimeSlot:
+      type: object
+      required:
+      - startTime
+      - endTime
+      properties:
+        startTime:
+          type: string
+          pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+        endTime:
+          type: string
+          pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+    AvailableSlots:
+      type: object
+      required:
+      - doctorID
+      - date
+      - durationMinutes
+      - reason
+      - slots
+      properties:
+        doctorID:
+          type: string
+        date:
+          type: string
+          format: date
+        durationMinutes:
+          type: integer
+          enum:
+          - 10
+          - 15
+          - 20
+        reason:
+          type: string
+          description: >-
+            OK when slots exist. NO_SCHEDULE: the doctor has no range at all (PREF-C-007). CLOSED_DAY: no
+            range on this weekday (PREF-C-006). NO_FREE_SLOT: ranges exist but no slot is free. PAST_DATE:
+            the date is before today.
+          enum:
+          - OK
+          - NO_SCHEDULE
+          - CLOSED_DAY
+          - NO_FREE_SLOT
+          - PAST_DATE
+        slots:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+    ApplicationLicense:
+      description: >-
+        The license of an organization (tenant). Source: BackendMainServiceApp
+        controller WorkSpceController /licenseInfo, Commons ApplicationLicense.
+        The feature names in `features` are module keys such as appointmentModule,
+        billingModule, admissionModule, pharmacyModule, spellCheck, notification.
+        Clients match feature names ignoring case and non-alphanumeric characters.
+      type: object
+      properties:
+        licenseKey:
+          type: string
+        type:
+          type: string
+        validityStart:
+          type: string
+          format: date-time
+        validityEnd:
+          type: string
+          format: date-time
+        licenseStatus:
+          type: string
+          description: Expected value 'Valid' while the license is usable.
+        organization:
+          type: string
+        address:
+          type: string
+        hospitalID:
+          type: string
+        contactNumber:
+          type: string
+        emailAddress:
+          type: string
+        usersLimit:
+          type: integer
+          format: int32
+        reportFormatLimit:
+          type: integer
+          format: int32
+        currentUsers:
+          type: integer
+          format: int32
+        currentReportFormat:
+          type: integer
+          format: int32
+        currentReports:
+          type: integer
+          format: int32
+        features:
+          type: array
+          description: Enabled feature keys for the organization.
+          items:
+            type: string
     APIMessageLoad:
       type: object
       properties:
